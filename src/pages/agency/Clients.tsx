@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,8 +13,6 @@ export function AgencyClients() {
     { label: 'Settings', href: '/agency/settings', icon: '⚙️' },
   ];
 
-  const mockUser = { type: 'agency' as const, name: 'Elite PR Solutions' };
-
   const mockClients = [
     { id: 1, name: 'Acme Corp', industry: 'Technology', joined: '2024-01-15', status: 'Active' },
     { id: 2, name: 'TechStart Inc', industry: 'Software', joined: '2024-02-20', status: 'Active' },
@@ -25,7 +22,7 @@ export function AgencyClients() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar user={mockUser} />
+      <Navbar />
       <div className="flex">
         <Sidebar items={sidebarItems} userType="agency" />
         <main className="flex-1 p-6">

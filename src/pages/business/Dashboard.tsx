@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -150,7 +149,7 @@ export function BusinessDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar user={mockUser} />
+      <Navbar />
       <div className="flex">
         <Sidebar items={sidebarItems} userType="business" />
         <main className="flex-1 p-6">

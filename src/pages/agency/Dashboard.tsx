@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,11 +12,9 @@ export function AgencyDashboard() {
     { label: 'Settings', href: '/agency/settings', icon: '⚙️' },
   ];
 
-  const mockUser = { type: 'agency' as const, name: 'Elite PR Solutions' };
-
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar user={mockUser} />
+      <Navbar />
       <div className="flex">
         <Sidebar items={sidebarItems} userType="agency" />
         <main className="flex-1 p-6">
