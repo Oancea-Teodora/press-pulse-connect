@@ -9,7 +9,135 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      agencies: {
+        Row: {
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          invite_code: string
+          website: string | null
+        }
+        Insert: {
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          description?: string | null
+          id: string
+          invite_code: string
+          website?: string | null
+        }
+        Update: {
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          invite_code?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      partnerships: {
+        Row: {
+          agency_id: string | null
+          approved_at: string | null
+          business_id: string | null
+          created_at: string | null
+          id: string
+          status: Database["public"]["Enums"]["partnership_status"] | null
+        }
+        Insert: {
+          agency_id?: string | null
+          approved_at?: string | null
+          business_id?: string | null
+          created_at?: string | null
+          id?: string
+          status?: Database["public"]["Enums"]["partnership_status"] | null
+        }
+        Update: {
+          agency_id?: string | null
+          approved_at?: string | null
+          business_id?: string | null
+          created_at?: string | null
+          id?: string
+          status?: Database["public"]["Enums"]["partnership_status"] | null
+        }
+        Relationships: []
+      }
+      pr_requests: {
+        Row: {
+          agency_id: string | null
+          business_id: string | null
+          created_at: string | null
+          description: string | null
+          feedback: string | null
+          id: string
+          media_files: Json | null
+          pr_body: string
+          pr_title: string
+          selected_outlets: Json | null
+          status: Database["public"]["Enums"]["request_status"] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          agency_id?: string | null
+          business_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          feedback?: string | null
+          id?: string
+          media_files?: Json | null
+          pr_body: string
+          pr_title: string
+          selected_outlets?: Json | null
+          status?: Database["public"]["Enums"]["request_status"] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          agency_id?: string | null
+          business_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          feedback?: string | null
+          id?: string
+          media_files?: Json | null
+          pr_body?: string
+          pr_title?: string
+          selected_outlets?: Json | null
+          status?: Database["public"]["Enums"]["request_status"] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          company_name: string
+          created_at: string | null
+          id: string
+          updated_at: string | null
+          user_type: Database["public"]["Enums"]["user_type"]
+        }
+        Insert: {
+          company_name: string
+          created_at?: string | null
+          id: string
+          updated_at?: string | null
+          user_type: Database["public"]["Enums"]["user_type"]
+        }
+        Update: {
+          company_name?: string
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_type?: Database["public"]["Enums"]["user_type"]
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +146,9 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      partnership_status: "pending" | "approved" | "rejected"
+      request_status: "pending" | "in_progress" | "completed" | "rejected"
+      user_type: "business" | "agency"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +263,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      partnership_status: ["pending", "approved", "rejected"],
+      request_status: ["pending", "in_progress", "completed", "rejected"],
+      user_type: ["business", "agency"],
+    },
   },
 } as const

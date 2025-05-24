@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Navbar } from "@/components/Layout/Navbar";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 export function Login() {
   const navigate = useNavigate();
@@ -13,14 +15,50 @@ export function Login() {
   const userType = searchParams.get('type') || 'business';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { signIn } = useAuth();
+  const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock login - in real app, this would authenticate with backend
-    if (userType === 'business') {
-      navigate('/business/dashboard');
-    } else {
-      navigate('/agency/dashboard');
+    setLoading(true);
+
+    try {
+      const { data, error } = await signIn(email, password);
+      
+      if (error) {
+        toast({
+          title: "Login failed",
+          description: error.message,
+          variant: "destructive"
+        });
+        return;
+      }
+
+      if (data.user) {
+        // Check user type and redirect accordingly
+        const userMetadata = data.user.user_metadata;
+        if (userMetadata?.user_type === 'business') {
+          navigate('/business/dashboard');
+        } else if (userMetadata?.user_type === 'agency') {
+          navigate('/agency/dashboard');
+        } else {
+          // Fallback based on URL parameter
+          if (userType === 'business') {
+            navigate('/business/dashboard');
+          } else {
+            navigate('/agency/dashboard');
+          }
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "An error occurred",
+        description: "Please try again later",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -57,8 +95,8 @@ export function Login() {
                   required 
                 />
               </div>
-              <Button type="submit" className="w-full">
-                Login
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Logging in..." : "Login"}
               </Button>
             </form>
             

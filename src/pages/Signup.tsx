@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Navbar } from "@/components/Layout/Navbar";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 export function Signup() {
   const navigate = useNavigate();
@@ -17,14 +19,69 @@ export function Signup() {
     password: '',
     confirmPassword: ''
   });
+  const [loading, setLoading] = useState(false);
+  const { signUp } = useAuth();
+  const { toast } = useToast();
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock signup - in real app, this would create account with backend
-    if (userType === 'business') {
-      navigate('/business/dashboard');
-    } else {
-      navigate('/agency/dashboard');
+    
+    if (formData.password !== formData.confirmPassword) {
+      toast({
+        title: "Password mismatch",
+        description: "Passwords do not match",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      toast({
+        title: "Password too short",
+        description: "Password must be at least 6 characters",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { data, error } = await signUp(formData.email, formData.password, {
+        user_type: userType,
+        company_name: formData.companyName
+      });
+      
+      if (error) {
+        toast({
+          title: "Signup failed",
+          description: error.message,
+          variant: "destructive"
+        });
+        return;
+      }
+
+      if (data.user) {
+        toast({
+          title: "Account created successfully!",
+          description: "You can now login to your account"
+        });
+        
+        // Redirect to appropriate dashboard
+        if (userType === 'business') {
+          navigate('/business/dashboard');
+        } else {
+          navigate('/agency/dashboard');
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "An error occurred",
+        description: "Please try again later",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,6 +131,7 @@ export function Signup() {
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
                   required 
+                  minLength={6}
                 />
               </div>
               <div>
@@ -86,8 +144,8 @@ export function Signup() {
                   required 
                 />
               </div>
-              <Button type="submit" className="w-full">
-                Create Account
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Creating Account..." : "Create Account"}
               </Button>
             </form>
             
